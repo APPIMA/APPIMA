@@ -1,13 +1,16 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../Colors";
+import GlobalContext from "../Context/GlobalContext";
 
 export default function BarTitle({ name }) {
+  const { addDevice } = useContext(GlobalContext);
+
   return (
     <View style={styles.bar}>
       <Text style={styles.title}>{name}</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={addDevice} style={styles.button}>
         <Ionicons name="add" size={32} color="black" />
       </TouchableOpacity>
     </View>
