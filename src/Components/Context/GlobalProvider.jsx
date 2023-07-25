@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useMemo, useReducer } from "react";
 
 import PropTypes from "prop-types";
 
@@ -7,8 +7,8 @@ import globalReducer from "./globalReducer";
 import types from "./globalTypes";
 
 const init = () => ({
-  devices: []
-})
+  devices: [],
+});
 
 function GlobalProvider({ children }) {
   const [globalState, dispatch] = useReducer(globalReducer, {}, init);
@@ -16,15 +16,15 @@ function GlobalProvider({ children }) {
   const addDevice = useCallback(() => {
     const device = {
       id: Date.now(),
-      nombre: 'Default',
+      nombre: "Default",
       lecturas: [
         Math.floor(Math.random() * (100 - 1) + 1),
         Math.floor(Math.random() * (100 - 1) + 1),
         Math.floor(Math.random() * (100 - 1) + 1),
         Math.floor(Math.random() * (100 - 1) + 1),
       ],
+      connection: Math.floor(Math.random() * (3 - 1) + 1) === 1,
     };
-
 
     const action = {
       type: types.addDevice,
@@ -32,19 +32,33 @@ function GlobalProvider({ children }) {
     };
 
     dispatch(action);
-  },[]);
+  }, []);
+
+  const changeDeviceTitle = useCallback((newTitle, id) => {
+    const action = {
+      type: types.changeTitleDevice,
+      payload: {
+        newTitle,
+        id,
+      },
+    };
+
+    dispatch(action);
+  }, []);
+
+  const context = useMemo(
+    () => ({
+      ...globalState,
+
+      // Methods
+      addDevice,
+      changeDeviceTitle,
+    }),
+    [globalState, addDevice, changeDeviceTitle],
+  );
 
   return (
-    <GlobalContext.Provider
-      value={{
-        ...globalState,
-
-        // Methods
-        addDevice
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
+    <GlobalContext.Provider value={context}>{children}</GlobalContext.Provider>
   );
 }
 

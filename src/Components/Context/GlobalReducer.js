@@ -8,6 +8,20 @@ const globalReducer = (state = {}, action = '') => {
         devices: [...state.devices, action.payload]
       };
 
+    case types.changeTitleDevice:
+      return {
+        ...state,
+        devices: state.devices.map((device) => {
+          if (device.id === action.payload.id) {
+            return {
+              ...device,
+              nombre: action.payload.newTitle
+            }
+          }
+          return device;
+        })
+      }
+
     default:
       return state;
   }
