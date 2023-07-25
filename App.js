@@ -17,7 +17,7 @@ export default function App() {
           translucent={false}
           backgroundColor={Colors.darkBlue}
         />
-        <BarTitle name="Menu" />
+        <BarTitle barTitle="Dispositivos" />
         <Devices />
       </GlobalProvider>
     </View>
