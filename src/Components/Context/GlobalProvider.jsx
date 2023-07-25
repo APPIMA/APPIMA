@@ -13,17 +13,17 @@ const init = () => ({
 function GlobalProvider({ children }) {
   const [globalState, dispatch] = useReducer(globalReducer, {}, init);
 
-  const addDevice = useCallback(() => {
+  const addDevice = useCallback(({ deviceName, port, IP }) => {
     const device = {
       id: Date.now(),
-      nombre: "Default",
-      lecturas: [
-        Math.floor(Math.random() * (100 - 1) + 1),
-        Math.floor(Math.random() * (100 - 1) + 1),
-        Math.floor(Math.random() * (100 - 1) + 1),
-        Math.floor(Math.random() * (100 - 1) + 1),
-      ],
-      connection: Math.floor(Math.random() * (3 - 1) + 1) === 1,
+      nombre: deviceName,
+      port,
+      IP,
+      lectura1: Math.floor(Math.random() * (100 - 1) + 1),
+      lectura2: Math.floor(Math.random() * (100 - 1) + 1),
+      lectura3: Math.floor(Math.random() * (100 - 1) + 1),
+      lectura4: Math.floor(Math.random() * (100 - 1) + 1),
+      lastUpdate: Date.now()
     };
 
     const action = {
@@ -33,6 +33,8 @@ function GlobalProvider({ children }) {
 
     dispatch(action);
   }, []);
+
+  
 
   const changeDeviceTitle = useCallback((newTitle, id) => {
     const action = {
@@ -46,6 +48,15 @@ function GlobalProvider({ children }) {
     dispatch(action);
   }, []);
 
+  const changeBarTitle = useCallback((newTitle) => {
+    const action = {
+      type: types.changeTitleDevice,
+      payload: newTitle
+    }
+
+    dispatch(action)
+  }, []);
+
   const context = useMemo(
     () => ({
       ...globalState,
@@ -53,8 +64,9 @@ function GlobalProvider({ children }) {
       // Methods
       addDevice,
       changeDeviceTitle,
+      changeBarTitle,
     }),
-    [globalState, addDevice, changeDeviceTitle],
+    [globalState, addDevice, changeDeviceTitle, changeBarTitle],
   );
 
   return (

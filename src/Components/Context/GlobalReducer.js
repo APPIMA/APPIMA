@@ -22,6 +22,12 @@ const globalReducer = (state = {}, action = '') => {
         })
       }
 
+    case types.changeBarTitle: 
+      return {
+        ...state,
+        barTitle: action.payload, 
+      }
+
     default:
       return state;
   }
