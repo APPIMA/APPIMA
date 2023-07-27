@@ -9,7 +9,7 @@ import {
 import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../Colors";
-import GlobalContext from "../Context/GlobalContext";
+import GlobalContext from "../../Context/GlobalContext";
 import CustomText from "../ui/CustomText";
 
 export default function BarTitle({ barTitle }) {
@@ -17,7 +17,7 @@ export default function BarTitle({ barTitle }) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deviceName, setDeviceName] = useState("");
-  const [IP, setIP] = useState("");
+  const [host, setHost] = useState("");
   const [port, setPort] = useState("");
 
   const toggleModal = () => {
@@ -26,9 +26,9 @@ export default function BarTitle({ barTitle }) {
 
   const handleSave = () => {
     toggleModal();
-    addDevice({ deviceName, port, IP });
+    addDevice({ deviceName, port, host });
     setDeviceName("");
-    setIP("");
+    setHost("");
     setPort("");
   };
 
@@ -49,7 +49,7 @@ export default function BarTitle({ barTitle }) {
             />
             <TextInput
               style={styles.input}
-              onChangeText={setIP}
+              onChangeText={setHost}
               placeholder="Escriba la dirección IP"
             />
             <TextInput

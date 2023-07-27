@@ -1,11 +1,11 @@
 import types from "./globalTypes";
 
-const globalReducer = (state = {}, action = '') => {
+const globalReducer = (state = {}, action = "") => {
   switch (action.type) {
     case types.addDevice:
       return {
         ...state,
-        devices: [...state.devices, action.payload]
+        devices: [...state.devices, action.payload],
       };
 
     case types.changeTitleDevice:
@@ -15,18 +15,24 @@ const globalReducer = (state = {}, action = '') => {
           if (device.id === action.payload.id) {
             return {
               ...device,
-              nombre: action.payload.newTitle
-            }
+              nombre: action.payload.newTitle,
+            };
           }
           return device;
-        })
-      }
+        }),
+      };
 
-    case types.changeBarTitle: 
+    case types.changeBarTitle:
       return {
         ...state,
-        barTitle: action.payload, 
-      }
+        barTitle: action.payload,
+      };
+
+    case types.setDevices:
+      return {
+        ...state,
+        devices: action.payload,
+      };
 
     default:
       return state;
