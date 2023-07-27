@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
-import { FontAwesome } from "@expo/vector-icons";
 import Lecturas from "./Lecturas";
 import Colors from "../../Colors";
 import CustomText from "../ui/CustomText";
-import GlobalContext from "../Context/GlobalContext";
+import GlobalContext from "../../Context/GlobalContext";
+import getRelativeTimeText from "../../utils/getRelativeTimeText";
 
 export default function Device({
   nombre,
@@ -21,10 +21,11 @@ export default function Device({
   lectura3,
   lectura4,
   id,
-  connection,
+  host,
+  port,
+  lastUpdate,
 }) {
   const { changeDeviceTitle } = useContext(GlobalContext);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newDeviceName, setNewDeviceName] = useState(nombre);
 
@@ -42,16 +43,9 @@ export default function Device({
       <View style={styles.deviceInfoContainer}>
         <View style={styles.deviceNameContainer}>
           <CustomText style={styles.deviceName}>{nombre}</CustomText>
-          <TouchableOpacity onPress={toggleModal} style={styles.button}>
-            <FontAwesome
-              name="pencil-square-o"
-              size={18}
-              color={Colors.darkText}
-            />
-          </TouchableOpacity>
         </View>
-        <CustomText style={styles.deviceLastUpdate}>
-          {connection ? "Conectado" : "Sin Conexión"}
+        <CustomText onPress={toggleModal} style={styles.changeConfiguration}>
+          Editar configuración
         </CustomText>
       </View>
 
@@ -81,6 +75,10 @@ export default function Device({
         lectura3={lectura3}
         lectura4={lectura4}
       />
+
+      <CustomText style={styles.ipAddress}>
+        {`${host}:${port} - ${getRelativeTimeText(parseInt((Date.now() - lastUpdate) / 1000, 10))}`}
+      </CustomText>
     </View>
   );
 }
@@ -109,7 +107,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
-  deviceLastUpdate: {
+  changeConfiguration: {
     color: Colors.white,
     backgroundColor: Colors.darkBlue,
     paddingHorizontal: 12,
@@ -123,6 +121,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     gap: 6,
+  },
+  ipAddress: {
+    color: Colors.white,
+    backgroundColor: Colors.darkBlue,
+    width: "100%",
+    textAlign: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
   },
 
   // Modal styles
@@ -171,5 +179,5 @@ Device.propTypes = {
   lectura1: PropTypes.number.isRequired,
   lectura2: PropTypes.number.isRequired,
   lectura3: PropTypes.number.isRequired,
-  lectura4: PropTypes.number.isRequired
+  lectura4: PropTypes.number.isRequired,
 };
