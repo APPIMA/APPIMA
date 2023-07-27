@@ -16,11 +16,25 @@ function GlobalProvider({ children }) {
   const addDevice = useCallback(({ deviceName, port, host }) => {
     const device = {
       id: Date.now(),
-      nombre: deviceName,
-      lectura1: -1,
-      lectura2: -1,
-      lectura3: -1,
-      lectura4: -1,
+      name: deviceName,
+      sensores: [
+        {
+          name: "Default",
+          lectura: null,
+        },
+        {
+          name: "Default",
+          lectura: null,
+        },
+        {
+          name: "Default",
+          lectura: null,
+        },
+        {
+          name: "Default",
+          lectura: null,
+        },
+      ],
       port,
       host,
       lastUpdate: Date.now(),
@@ -34,13 +48,10 @@ function GlobalProvider({ children }) {
     dispatch(action);
   }, []);
 
-  const changeDeviceTitle = useCallback((newTitle, id) => {
+  const changeDeviceSettings = useCallback((newDevice) => {
     const action = {
-      type: types.changeTitleDevice,
-      payload: {
-        newTitle,
-        id,
-      },
+      type: types.changeDeviceSettings,
+      payload: newDevice,
     };
 
     dispatch(action);
@@ -70,11 +81,11 @@ function GlobalProvider({ children }) {
 
       // Methods
       addDevice,
-      changeDeviceTitle,
+      changeDeviceSettings,
       changeBarTitle,
       setDevices,
     }),
-    [globalState, addDevice, changeDeviceTitle, changeBarTitle, setDevices],
+    [globalState, addDevice, changeDeviceSettings, changeBarTitle, setDevices],
   );
 
   return (

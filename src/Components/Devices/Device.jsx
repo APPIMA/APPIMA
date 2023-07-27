@@ -14,27 +14,24 @@ import CustomText from "../ui/CustomText";
 import GlobalContext from "../../Context/GlobalContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
 
-export default function Device({
-  nombre,
-  lectura1,
-  lectura2,
-  lectura3,
-  lectura4,
-  id,
-  host,
-  port,
-  lastUpdate,
-}) {
-  const { changeDeviceTitle } = useContext(GlobalContext);
+export default function Device({ name, sensores, id, host, port, lastUpdate }) {
+  const { changeDeviceSettings } = useContext(GlobalContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newDeviceName, setNewDeviceName] = useState(nombre);
+  const [newDeviceName, setNewDeviceName] = useState(name);
+  const [newHost, setNewHost] = useState(host);
+  const [newPort, setNewPort] = useState(port);
 
   const toggleModal = () => {
     setIsModalVisible((prev) => !prev);
   };
 
   const handleSave = () => {
-    changeDeviceTitle(newDeviceName, id);
+    changeDeviceSettings({
+      id,
+      name: newDeviceName,
+      host: newHost,
+      port: newPort,
+    });
     toggleModal();
   };
 
@@ -42,7 +39,7 @@ export default function Device({
     <View style={styles.deviceContainer}>
       <View style={styles.deviceInfoContainer}>
         <View style={styles.deviceNameContainer}>
-          <CustomText style={styles.deviceName}>{nombre}</CustomText>
+          <CustomText style={styles.deviceName}>{name}</CustomText>
         </View>
         <CustomText onPress={toggleModal} style={styles.changeConfiguration}>
           Editar configuración
@@ -56,28 +53,36 @@ export default function Device({
               style={styles.input}
               value={newDeviceName}
               onChangeText={setNewDeviceName}
-              placeholder="Enter new name"
+              placeholder="Escribe un nuevo nombre"
+            />
+            <TextInput
+              style={styles.input}
+              value={newHost}
+              onChangeText={setNewHost}
+              placeholder="Escribe una nueva dirección"
+            />
+            <TextInput
+              style={styles.input}
+              value={newPort}
+              onChangeText={setNewPort}
+              placeholder="Escribe un nuevo puerto"
             />
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-              <CustomText style={styles.saveButtonText}>Save</CustomText>
+              <CustomText style={styles.saveButtonText}>Guardar</CustomText>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
-              <CustomText style={styles.cancelButtonText}>Cancel</CustomText>
+              <CustomText style={styles.cancelButtonText}>Cancelar</CustomText>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      <Lecturas
-        id={id}
-        lectura1={lectura1}
-        lectura2={lectura2}
-        lectura3={lectura3}
-        lectura4={lectura4}
-      />
+      <Lecturas id={id} sensores={sensores} />
 
       <CustomText style={styles.ipAddress}>
-        {`${host}:${port} - ${getRelativeTimeText(parseInt((Date.now() - lastUpdate) / 1000, 10))}`}
+        {`${host}:${port} - ${getRelativeTimeText(
+          parseInt((Date.now() - lastUpdate) / 1000, 10),
+        )}`}
       </CustomText>
     </View>
   );
@@ -175,9 +180,6 @@ const styles = StyleSheet.create({
 });
 
 Device.propTypes = {
-  nombre: PropTypes.string.isRequired,
-  lectura1: PropTypes.number.isRequired,
-  lectura2: PropTypes.number.isRequired,
-  lectura3: PropTypes.number.isRequired,
-  lectura4: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  sensores: PropTypes.array.isRequired,
 };
