@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/upsin.png",
         "backgroundColor": "#e9ecef"
-      }
+      },
+      "package": "com.alejandrolga02.proyectoembebidos"
     },
     "web": {
       "favicon": "./assets/icons/upsin.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bf84abcc-b715-48ee-83ea-cbd402c6698e"
+      }
     }
   }
 }

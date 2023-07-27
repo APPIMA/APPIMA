@@ -4,7 +4,7 @@ import React from "react";
 import Colors from "./src/Colors";
 import BarTitle from "./src/Components/BarTitle/BarTitle";
 import Devices from "./src/Components/Devices/Devices";
-import GlobalProvider from "./src/Components/Context/GlobalProvider";
+import GlobalProvider from "./src/Context/GlobalProvider";
 
 export default function App() {
   return (
