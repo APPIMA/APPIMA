@@ -23,6 +23,7 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'react/jsx-props-no-spreading': 'off',
     'global-require': 'off',
+    'no-prototype-builtins': 'off'
   },
   globals: {
     fetch: false,
