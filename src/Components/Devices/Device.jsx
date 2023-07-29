@@ -15,7 +15,7 @@ import GlobalContext from "../../Context/GlobalContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
 
 export default function Device({ name, sensores, id, host, port, lastUpdate }) {
-  const { changeDeviceSettings } = useContext(GlobalContext);
+  const { changeDeviceSettings, deleteDevice } = useContext(GlobalContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newDeviceName, setNewDeviceName] = useState(name);
   const [newHost, setNewHost] = useState(host);
@@ -34,6 +34,11 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
     });
     toggleModal();
   };
+
+  const handleDelete = () => {
+    deleteDevice(id);
+    toggleModal();
+  }
 
   return (
     <View style={styles.deviceContainer}>
@@ -68,10 +73,13 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
               placeholder="Escribe un nuevo puerto"
             />
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-              <CustomText style={styles.saveButtonText}>Guardar</CustomText>
+              <CustomText style={styles.saveButtonText}>Actualizar</CustomText>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
               <CustomText style={styles.cancelButtonText}>Cancelar</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+              <CustomText style={styles.deleteButtonText}>Eliminar Dispositivo</CustomText>
             </TouchableOpacity>
           </View>
         </View>
@@ -165,6 +173,16 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   saveButtonText: {
+    color: Colors.white,
+    fontSize: 16,
+  },
+  deleteButton: {
+    backgroundColor: Colors.red,
+    paddingVertical: 12,
+    alignItems: "center",
+    borderRadius: 4,
+  },
+  deleteButtonText: {
     color: Colors.white,
     fontSize: 16,
   },

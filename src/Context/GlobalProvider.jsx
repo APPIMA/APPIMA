@@ -19,19 +19,19 @@ function GlobalProvider({ children }) {
       name: deviceName,
       sensores: [
         {
-          name: "Default",
+          name: "Sensor 1",
           lectura: null,
         },
         {
-          name: "Default",
+          name: "Sensor 2",
           lectura: null,
         },
         {
-          name: "Default",
+          name: "Sensor 3",
           lectura: null,
         },
         {
-          name: "Default",
+          name: "Sensor 4",
           lectura: null,
         },
       ],
@@ -75,6 +75,15 @@ function GlobalProvider({ children }) {
     dispatch(action);
   }, []);
 
+  const deleteDevice = useCallback((id) => {
+    const action = {
+      type: types.deleteDevice,
+      payload: id,
+    }
+
+    dispatch(action)
+  }, []);
+
   const context = useMemo(
     () => ({
       ...globalState,
@@ -84,8 +93,9 @@ function GlobalProvider({ children }) {
       changeDeviceSettings,
       changeBarTitle,
       setDevices,
+      deleteDevice
     }),
-    [globalState, addDevice, changeDeviceSettings, changeBarTitle, setDevices],
+    [globalState, addDevice, changeDeviceSettings, changeBarTitle, setDevices, deleteDevice],
   );
 
   return (

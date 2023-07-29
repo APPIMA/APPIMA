@@ -34,6 +34,12 @@ const globalReducer = (state = {}, action = "") => {
         devices: action.payload,
       };
 
+    case types.deleteDevice:
+      return {
+        ...state,
+        devices: state.devices.filter((device) => device.id !== action.payload)
+      }
+
     default:
       return state;
   }
