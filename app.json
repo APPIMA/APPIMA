@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "APIMMA",
-    "slug": "APIMMA",
+    "name": "APPIMA",
+    "slug": "APPIMA",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/icons/icon.png",
         "backgroundColor": "#e9ecef"
       },
-      "package": "com.APIMMA.app"
+      "package": "com.APPIMA.app"
     },
     "web": {
       "favicon": "./assets/icons/icon.png"
