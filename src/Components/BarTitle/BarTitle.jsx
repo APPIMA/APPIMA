@@ -9,11 +9,11 @@ import {
 import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../Colors";
-import GlobalContext from "../../Context/GlobalContext";
+import DevicesContext from "../../Context/DevicesContext";
 import CustomText from "../ui/CustomText";
 
 export default function BarTitle({ barTitle }) {
-  const { addDevice } = useContext(GlobalContext);
+  const { addDevice } = useContext(DevicesContext);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deviceName, setDeviceName] = useState("");
@@ -58,10 +58,10 @@ export default function BarTitle({ barTitle }) {
               placeholder="Escriba el puerto"
             />
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-              <CustomText style={styles.saveButtonText}>Save</CustomText>
+              <CustomText style={styles.saveButtonText}>Guardar</CustomText>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
-              <CustomText style={styles.cancelButtonText}>Cancel</CustomText>
+              <CustomText style={styles.cancelButtonText}>Cancelar</CustomText>
             </TouchableOpacity>
           </View>
         </View>
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.darkBlue,
     elevation: 10,
+    height: 56
   },
   title: {
     fontSize: 32,

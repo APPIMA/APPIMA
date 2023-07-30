@@ -4,12 +4,12 @@ import React from "react";
 import Colors from "./src/Colors";
 import BarTitle from "./src/Components/BarTitle/BarTitle";
 import Devices from "./src/Components/Devices/Devices";
-import GlobalProvider from "./src/Context/GlobalProvider";
+import DevicesProvider from "./src/Context/DevicesProvider";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <GlobalProvider>
+      <DevicesProvider>
         <StatusBar
           hidden={false}
           barStyle="default"
@@ -19,7 +19,7 @@ export default function App() {
         />
         <BarTitle barTitle="Dispositivos" />
         <Devices />
-      </GlobalProvider>
+      </DevicesProvider>
     </View>
   );
 }

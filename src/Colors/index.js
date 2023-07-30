@@ -9,7 +9,7 @@ const Colors = {
   background: '#e9ecef',
   lighterBlue: '#014f86',
   text: '#e7ecef',
-  darkText: '#212529'
+  darkText: '#212529',
 };
 
 export default Colors;

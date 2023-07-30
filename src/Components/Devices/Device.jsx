@@ -11,11 +11,11 @@ import PropTypes from "prop-types";
 import Lecturas from "./Lecturas";
 import Colors from "../../Colors";
 import CustomText from "../ui/CustomText";
-import GlobalContext from "../../Context/GlobalContext";
+import DevicesContext from "../../Context/DevicesContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
 
 export default function Device({ name, sensores, id, host, port, lastUpdate }) {
-  const { changeDeviceSettings, deleteDevice } = useContext(GlobalContext);
+  const { changeDeviceSettings, deleteDevice } = useContext(DevicesContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newDeviceName, setNewDeviceName] = useState(name);
   const [newHost, setNewHost] = useState(host);

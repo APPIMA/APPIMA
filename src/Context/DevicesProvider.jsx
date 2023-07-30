@@ -2,16 +2,12 @@ import React, { useCallback, useMemo, useReducer } from "react";
 
 import PropTypes from "prop-types";
 
-import GlobalContext from "./GlobalContext";
-import globalReducer from "./globalReducer";
-import types from "./globalTypes";
+import DevicesContext from "./DevicesContext";
+import devicesReducer from "./devicesReducer";
+import types from "./devicesTypes";
 
-const init = () => ({
-  devices: [],
-});
-
-function GlobalProvider({ children }) {
-  const [globalState, dispatch] = useReducer(globalReducer, {}, init);
+function DevicesProvider({ children }) {
+  const [devices, dispatch] = useReducer(devicesReducer, []);
 
   const addDevice = useCallback(({ deviceName, port, host }) => {
     const device = {
@@ -57,15 +53,6 @@ function GlobalProvider({ children }) {
     dispatch(action);
   }, []);
 
-  const changeBarTitle = useCallback((newTitle) => {
-    const action = {
-      type: types.changeTitleDevice,
-      payload: newTitle,
-    };
-
-    dispatch(action);
-  }, []);
-
   const setDevices = useCallback((newDevices) => {
     const action = {
       type: types.setDevices,
@@ -79,32 +66,37 @@ function GlobalProvider({ children }) {
     const action = {
       type: types.deleteDevice,
       payload: id,
-    }
+    };
 
-    dispatch(action)
+    dispatch(action);
   }, []);
 
   const context = useMemo(
     () => ({
-      ...globalState,
+      devices,
 
       // Methods
       addDevice,
       changeDeviceSettings,
-      changeBarTitle,
       setDevices,
-      deleteDevice
+      deleteDevice,
     }),
-    [globalState, addDevice, changeDeviceSettings, changeBarTitle, setDevices, deleteDevice],
+    [
+      devices,
+      addDevice,
+      changeDeviceSettings,
+      setDevices,
+      deleteDevice,
+    ],
   );
 
   return (
-    <GlobalContext.Provider value={context}>{children}</GlobalContext.Provider>
+    <DevicesContext.Provider value={context}>{children}</DevicesContext.Provider>
   );
 }
 
-GlobalProvider.propTypes = {
+DevicesProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default GlobalProvider;
+export default DevicesProvider;

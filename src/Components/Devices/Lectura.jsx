@@ -56,6 +56,5 @@ const styles = StyleSheet.create({
 });
 
 Lectura.propTypes = {
-  lectura: PropTypes.any,
   name: PropTypes.string.isRequired
 };

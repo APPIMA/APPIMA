@@ -1,10 +1,10 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { Dimensions, ScrollView, StyleSheet } from "react-native";
-import GlobalContext from "../../Context/GlobalContext";
+import DevicesContext from "../../Context/DevicesContext";
 import Device from "./Device";
 
 export default function Devices() {
-  const { devices, setDevices } = useContext(GlobalContext);
+  const { devices, setDevices } = useContext(DevicesContext);
 
   const updateDevices = useCallback(() => {
     const updatedDevices = devices.map((device) => {
