@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useReducer } from "react";
-
+import React, { useCallback, useEffect, useMemo, useReducer } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PropTypes from "prop-types";
 
 import DevicesContext from "./DevicesContext";
@@ -8,6 +8,39 @@ import types from "./devicesTypes";
 
 function DevicesProvider({ children }) {
   const [devices, dispatch] = useReducer(devicesReducer, []);
+
+  useEffect(() => {
+    // Obtener dispositivos cuando el componente se monta
+    const loadDevicesFromStorage = async () => {
+      try {
+        const storedDevices = await AsyncStorage.getItem("devices");
+        if (storedDevices) {
+          const parsedDevices = JSON.parse(storedDevices);
+          setDevices(parsedDevices);
+        }
+      } catch (error) {
+        // Si hay error lo muestra por consola
+        console.error("Error loading devices from storage:", error);
+      }
+    };
+
+    loadDevicesFromStorage();
+  }, []);
+
+  useEffect(() => {
+    // Almacenar en los dispositivos cada que su estado cambie
+    const saveDevicesToStorage = async () => {
+      try {
+        const serializedDevices = JSON.stringify(devices);
+        await AsyncStorage.setItem("devices", serializedDevices);
+      } catch (error) {
+        // Si hay error lo muestra por consola
+        console.error("Error saving devices to storage:", error);
+      }
+    };
+
+    saveDevicesToStorage();
+  }, [devices]);
 
   const addDevice = useCallback(({ deviceName, port, host }) => {
     const device = {
