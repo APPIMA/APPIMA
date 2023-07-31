@@ -13,13 +13,16 @@ import Colors from "../../Colors";
 import CustomText from "../ui/CustomText";
 import DevicesContext from "../../Context/DevicesContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
+import useForm from "../../hooks/useForm";
 
 export default function Device({ name, sensores, id, host, port, lastUpdate }) {
   const { changeDeviceSettings, deleteDevice } = useContext(DevicesContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newDeviceName, setNewDeviceName] = useState(name);
-  const [newHost, setNewHost] = useState(host);
-  const [newPort, setNewPort] = useState(port);
+  const { newDeviceName, newHost, newPort, onInputChange } = useForm({
+    newDeviceName: name,
+    newHost: host,
+    newPort: port,
+  });
 
   const toggleModal = () => {
     setIsModalVisible((prev) => !prev);
@@ -38,7 +41,7 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
   const handleDelete = () => {
     deleteDevice(id);
     toggleModal();
-  }
+  };
 
   return (
     <View style={styles.deviceContainer}>
@@ -57,19 +60,25 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
             <TextInput
               style={styles.input}
               value={newDeviceName}
-              onChangeText={setNewDeviceName}
+              onChangeText={(text) =>
+                onInputChange({ name: "newDeviceName", value: text })
+              }
               placeholder="Escribe un nuevo nombre"
             />
             <TextInput
               style={styles.input}
               value={newHost}
-              onChangeText={setNewHost}
+              onChangeText={(text) =>
+                onInputChange({ name: "newHost", value: text })
+              }
               placeholder="Escribe una nueva dirección"
             />
             <TextInput
               style={styles.input}
               value={newPort}
-              onChangeText={setNewPort}
+              onChangeText={(text) =>
+                onInputChange({ name: "newPort", value: text })
+              }
               placeholder="Escribe un nuevo puerto"
             />
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
@@ -78,8 +87,13 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
             <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
               <CustomText style={styles.cancelButtonText}>Cancelar</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-              <CustomText style={styles.deleteButtonText}>Eliminar Dispositivo</CustomText>
+            <TouchableOpacity
+              onPress={handleDelete}
+              style={styles.deleteButton}
+            >
+              <CustomText style={styles.deleteButtonText}>
+                Eliminar Dispositivo
+              </CustomText>
             </TouchableOpacity>
           </View>
         </View>
