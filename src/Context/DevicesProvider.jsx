@@ -9,7 +9,7 @@ import types from "./devicesTypes";
 function DevicesProvider({ children }) {
   const [devices, dispatch] = useReducer(devicesReducer, []);
 
-  useEffect(() => {
+    useEffect(() => {
     // Obtener dispositivos cuando el componente se monta
     const loadDevicesFromStorage = async () => {
       try {

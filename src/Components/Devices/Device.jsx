@@ -60,24 +60,24 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
             <TextInput
               style={styles.input}
               value={newDeviceName}
-              onChangeText={(text) =>
-                onInputChange({ name: "newDeviceName", value: text })
+              onChangeText={(value) =>
+                onInputChange({ name: "newDeviceName", value })
               }
               placeholder="Escribe un nuevo nombre"
             />
             <TextInput
               style={styles.input}
               value={newHost}
-              onChangeText={(text) =>
-                onInputChange({ name: "newHost", value: text })
+              onChangeText={(value) =>
+                onInputChange({ name: "newHost", value })
               }
               placeholder="Escribe una nueva dirección"
             />
             <TextInput
               style={styles.input}
               value={newPort}
-              onChangeText={(text) =>
-                onInputChange({ name: "newPort", value: text })
+              onChangeText={(value) =>
+                onInputChange({ name: "newPort", value })
               }
               placeholder="Escribe un nuevo puerto"
             />

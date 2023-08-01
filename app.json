@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "APPIMA",
-    "slug": "APPIMA",
+    "slug": "appima",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
@@ -22,14 +22,14 @@
         "foregroundImage": "./assets/icons/icon.png",
         "backgroundColor": "#e9ecef"
       },
-      "package": "com.APPIMA.app"
+      "package": "com.appima.app"
     },
     "web": {
       "favicon": "./assets/icons/icon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "bf84abcc-b715-48ee-83ea-cbd402c6698e"
+        "projectId": "4600d8f0-014d-48b5-a7aa-06df2083ef8f"
       }
     }
   }
