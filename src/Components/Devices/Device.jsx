@@ -15,6 +15,8 @@ import DevicesContext from "../../Context/DevicesContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
 import useForm from "../../hooks/useForm";
 import WebSocketManager from "../../classes/WebSocketManager";
+import Alerts from "../ui/Alerts";
+import validateDeviceSettings from "../../utils/validateDeviceSettings";
 
 export default function Device({ name, sensores, id, host, port, lastUpdate }) {
   const msgFunction = useCallback((lectures) => {
@@ -37,23 +39,26 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
       },
     ]);
   }, []);
-  
+
   const { changeDeviceSettings, deleteDevice, updateLectures } = useContext(DevicesContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [client, setClient] = useState(new WebSocketManager({host, id, msgFunction, port}));
-  const { newDeviceName, newHost, newPort, onInputChange } = useForm({
-    newDeviceName: name,
-    newHost: host,
-    newPort: port,
-  });
-  const [relativeTime, setRelativeTime] = useState(getRelativeTimeText(
-    parseInt((Date.now() - lastUpdate) / 1000, 10)
-  ));
+  const [client, setClient] = useState(
+    new WebSocketManager({ host, id, msgFunction, port }),
+  );
+  const { newDeviceName, newHost, newPort, onInputChange, onResetForm } = useForm({
+      newDeviceName: name,
+      newHost: host,
+      newPort: port,
+    });
+  const [relativeTime, setRelativeTime] = useState(
+    getRelativeTimeText(parseInt((Date.now() - lastUpdate) / 1000, 10)),
+  );
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const newRelativeTime = getRelativeTimeText(
-        parseInt((Date.now() - lastUpdate) / 1000, 10)
+        parseInt((Date.now() - lastUpdate) / 1000, 10),
       );
       setRelativeTime(newRelativeTime);
     }, 1000); // Intervalo de 1000 ms (1 segundo)
@@ -62,10 +67,9 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
       clearInterval(intervalId);
     };
   }, [lastUpdate]);
-  
 
   useEffect(() => {
-    setClient(new WebSocketManager({host, id, msgFunction, port}));
+    setClient(new WebSocketManager({ host, id, msgFunction, port }));
     client.openConnection();
 
     return () => {
@@ -78,6 +82,17 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
   };
 
   const handleSave = () => {
+    const invalidTypes = validateDeviceSettings({
+      name: newDeviceName,
+      host: newHost,
+      port: newPort,
+    });
+
+    setAlerts(invalidTypes);
+    if (invalidTypes.length > 0) {
+      return;
+    }
+
     changeDeviceSettings({
       id,
       name: newDeviceName,
@@ -90,6 +105,12 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
   const handleDelete = () => {
     deleteDevice(id);
     toggleModal();
+  };
+
+  const handleClose = () => {
+    toggleModal();
+    onResetForm();
+    setAlerts([]);
   };
 
   return (
@@ -106,6 +127,9 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
       <Modal visible={isModalVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {alerts.map((text, index) => (
+              <Alerts key={`alert_${index}`} text={text} />
+            ))}
             <TextInput
               style={styles.input}
               value={newDeviceName}
@@ -133,16 +157,11 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
               <CustomText style={styles.saveButtonText}>Actualizar</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
+            <TouchableOpacity onPress={handleClose} style={styles.cancelButton}>
               <CustomText style={styles.cancelButtonText}>Cancelar</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleDelete}
-              style={styles.deleteButton}
-            >
-              <CustomText style={styles.deleteButtonText}>
-                Eliminar Dispositivo
-              </CustomText>
+            <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+              <CustomText style={styles.deleteButtonText}>Eliminar Dispositivo</CustomText>
             </TouchableOpacity>
           </View>
         </View>
