@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Lecturas from "./Lecturas";
 import Colors from "../../Colors";
@@ -14,15 +14,64 @@ import CustomText from "../ui/CustomText";
 import DevicesContext from "../../Context/DevicesContext";
 import getRelativeTimeText from "../../utils/getRelativeTimeText";
 import useForm from "../../hooks/useForm";
+import WebSocketManager from "../../classes/WebSocketManager";
 
 export default function Device({ name, sensores, id, host, port, lastUpdate }) {
-  const { changeDeviceSettings, deleteDevice } = useContext(DevicesContext);
+  const msgFunction = useCallback((lectures) => {
+    updateLectures(id, [
+      {
+        lectura: lectures[0],
+        name: sensores[0].name,
+      },
+      {
+        lectura: lectures[1],
+        name: sensores[1].name,
+      },
+      {
+        lectura: lectures[2],
+        name: sensores[2].name,
+      },
+      {
+        lectura: lectures[3],
+        name: sensores[3].name,
+      },
+    ]);
+  }, []);
+  
+  const { changeDeviceSettings, deleteDevice, updateLectures } = useContext(DevicesContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [client, setClient] = useState(new WebSocketManager({host, id, msgFunction, port}));
   const { newDeviceName, newHost, newPort, onInputChange } = useForm({
     newDeviceName: name,
     newHost: host,
     newPort: port,
   });
+  const [relativeTime, setRelativeTime] = useState(getRelativeTimeText(
+    parseInt((Date.now() - lastUpdate) / 1000, 10)
+  ));
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newRelativeTime = getRelativeTimeText(
+        parseInt((Date.now() - lastUpdate) / 1000, 10)
+      );
+      setRelativeTime(newRelativeTime);
+    }, 1000); // Intervalo de 1000 ms (1 segundo)
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [lastUpdate]);
+  
+
+  useEffect(() => {
+    setClient(new WebSocketManager({host, id, msgFunction, port}));
+    client.openConnection();
+
+    return () => {
+      client.closeConnection();
+    };
+  }, [port, host]);
 
   const toggleModal = () => {
     setIsModalVisible((prev) => !prev);
@@ -102,9 +151,7 @@ export default function Device({ name, sensores, id, host, port, lastUpdate }) {
       <Lecturas id={id} sensores={sensores} />
 
       <CustomText style={styles.ipAddress}>
-        {`${host}:${port} - ${getRelativeTimeText(
-          parseInt((Date.now() - lastUpdate) / 1000, 10),
-        )}`}
+        {`${host}:${port} - ${relativeTime}`}
       </CustomText>
     </View>
   );
