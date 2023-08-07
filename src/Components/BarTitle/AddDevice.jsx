@@ -14,11 +14,14 @@ import useForm from "../../hooks/useForm";
 import DevicesContext from "../../Context/DevicesContext";
 import Colors from "../../Colors";
 import CustomText from "../ui/CustomText";
+import validateDeviceSettings from "../../utils/validateDeviceSettings";
+import Alerts from "../ui/Alerts";
 
 export default function AddDevice() {
   const { addDevice } = useContext(DevicesContext);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [alerts, setAlerts] = useState([]);
   const { deviceName, host, port, onInputChange, onResetForm } = useForm({
     deviceName: "",
     host: "",
@@ -30,8 +33,19 @@ export default function AddDevice() {
   };
 
   const handleSave = () => {
+    const invalidTypes = validateDeviceSettings({
+      name: deviceName,
+      host,
+      port,
+    });
+
+    setAlerts(invalidTypes);
+    if (invalidTypes.length > 0) {
+      return;
+    }
+
     toggleModal();
-    addDevice({ deviceName, port, host });
+    addDevice({ deviceName: deviceName.trim(), port, host });
     onResetForm();
   };
 
@@ -44,6 +58,9 @@ export default function AddDevice() {
       <Modal visible={isModalVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {alerts.map((text, index) => (
+              <Alerts key={`alert_${index}`} text={text} />
+            ))}
             <TextInput
               style={styles.input}
               onChangeText={(value) =>
